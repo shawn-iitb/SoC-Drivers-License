@@ -12,7 +12,7 @@ In my physical machine,
 
 - There are 10 cores (ids: 0, 4, 8, 12, 16, 20, 24, 25, 26, 27)
 - But 16 processors (core ids 0, 4, 8, 12, 16, 20 are repeated)
-- I am guessing that's possible coz in lscpu it shows 2 threads per core
+- This is possible coz in lscpu it shows 2 threads per core, hence each core can be used in upto two processors
 
 In my VM, there are 6 cores, 6 processors, 1 thread per core
 
@@ -228,8 +228,8 @@ Physical Memory: 5356 KiB
 ARRAY_SIZE = 1000000  
 size in bytes = 1000000 * 4 = 4,000,000  
 size in KiB = 4000000 / 1024 = 3906  
-half of array = 1953  
-memory3 - memory2 = 2060
+size of half the array = 1953  
+memory3 - memory2 = 2060  
 memory2 - memory1 = 2540  
 DOUBT: memory(3 - 2) is approx same as half the array, but why is memory(2 - 1) 500KiB more
 
