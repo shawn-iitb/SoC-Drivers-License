@@ -3,7 +3,7 @@
 
 This project implements a simplified Memory Management Unit (MMU) that translates virtual addresses into physical addresses using a multi-level page table. It is written in C++ and is configurable for different address widths, page sizes, and page table depths.
 
-**The first and the last sections are mandatory.**
+**The first and the last sections of the how to implement part are mandatory.**
 
 **If you are aware of how a page table walker is done, you are expected to write a custom memory allocator as mentioned in the week-3 README.md. At least a custom memory allocator is expected(need not be thread-safe)**
 ---
