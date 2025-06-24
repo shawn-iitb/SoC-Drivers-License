@@ -151,7 +151,7 @@ So far we've been doing the equivalent of "But we have a MMU at home".
 
 Let's use `memoryContents` for paging in itself, because hey, OS doesn't have a specific space where you store Page tables
 
-![Insert meme here](./PageTableWalkerProject/part-1/download.png)
+![Insert meme here](./download.png)
 
 Yep, we're gonna do everything with pages!
 
@@ -186,7 +186,7 @@ Yessir
 </details> 
 ‎
 
-![Page Table](./PageTableWalkerProject/part-1/page_table.png)
+![Page Table](./page_table.png)
 
 You would have to allocate a page from the `nextAvailablePage` if that part of the page says invalild implying that a corresponding page is not allocated. If that is done, you go to that new address and offset with 108, get the corresponding address and voila! You have your final frame number, lets say p.
 
@@ -206,4 +206,6 @@ Similarly, if its not a user page, but the user asks for it, throw. If its a rea
 
 
 That's about it, but reach out to me if you wanna do more!
+
+Write your solution in Memory.cpp and MMU.cpp(implementations of the above method). You can also submit the main.cpp you have used to test your implementation. 
 
