@@ -9,6 +9,8 @@ This project implements a simplified Memory Management Unit (MMU) that translate
 ---
 Deadline: 27th June 2025
 
+Note: The numbers used for addresses as examples are decimal. If you have any doubts reach out to us!
+
 ## Files and Structure
 
 ```
