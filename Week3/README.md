@@ -50,7 +50,7 @@ At this point if you're wondering: "Okay, if the solution to all of this is just
 
 ## Address translation
 
-So, one of the ways you can do it is by <b>"Segmenting"</b> the memory(sounds familiar?). You allocate chunks of memory to each process. But this becomes a headache too as you'll know soon. You can skim through [this](https://pages.cs.wisc.edu/~remzi/OSTEP/vm-mechanism.pdf) if you want to learn more about Segmentation. 
+So, one of the ways you can do it is by <b>"Segmenting"</b> the memory(sounds familiar?). You allocate chunks of memory to each process. But this becomes a headache too as you'll know soon. You can skim through [this](https://pages.cs.wisc.edu/~remzi/OSTEP/vm-segmentation.pdf) and [this](https://pages.cs.wisc.edu/~remzi/OSTEP/vm-mechanism.pdf) if you want to learn more about Segmentation. 
 
 (Unrelated but did you know gdb helps you fix Segmentation faults in a jiffy?)
 
