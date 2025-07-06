@@ -72,6 +72,18 @@ These open calls return a pointer in memory to which if you write, you write to 
 
 ---
 
+## Optional Shortcut Injection: Clear Terminal on F5 Keypress
+
+The goal is this. When the user presses the `F5` key, automatically inject the `clear` command followed by Enter — as if the user typed it — directly from the kernel.
+
+A few functions of interest would be `input_report_key` and `input_sync`. The first function simulates key presses and releases. `input_sync` marks a batch of such signals as complete to be sent to the user. This is similar to how in `cout`, we have flush - this ensure we see the things printed then and there.
+
+**NOTE:** Keystrokes are defined as macros in `input-event-codes.h`. So you might want to check that out.
+
+Recompile and reboot as usual. Now pressing `F5` should clear the terminal.
+
+Note that this works in TTYs and simple terminals like `xterm`, but not always in graphical input environments (like Wayland). 
+
 ## References
 
 - [Linux Input Subsystem Docs](https://www.kernel.org/doc/html/latest/input/)
@@ -86,14 +98,4 @@ These open calls return a pointer in memory to which if you write, you write to 
 
 ---
 
-## Shortcut Injection: Clear Terminal on F5 Keypress
 
-The goal is this. When the user presses the `F5` key, automatically inject the `clear` command followed by Enter — as if the user typed it — directly from the kernel.
-
-A few functions of interest would be `input_report_key` and `input_sync`. The first function simulates key presses and releases. `input_sync` marks a batch of such signals as complete to be sent to the user. This is similar to how in `cout`, we have flush - this ensure we see the things printed then and there.
-
-**NOTE:** Keystrokes are defined as macros in `input-event-codes.h`. So you might want to check that out.
-
-Recompile and reboot as usual. Now pressing `F5` should clear the terminal.
-
-Note that this works in TTYs and simple terminals like `xterm`, but not always in graphical input environments (like Wayland). 
