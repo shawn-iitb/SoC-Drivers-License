@@ -2,7 +2,7 @@
 
 This repository documents a series of progressively more complex experiments with the Linux PS/2 keyboard driver (`atkbd.c`). These are meant to be educational, safe experiments done in **VirtualBox** or any virtual machine running a custom-compiled Linux kernel.
 
- ⚠️ These are for learning and educational purposes only. Do **NOT** deploy on yoru own systems. Only test in VMs.
+ ⚠️ ###These are for learning and educational purposes only. Do **NOT** deploy on yoru own systems. Only test in VMs.
 
 ---
 
