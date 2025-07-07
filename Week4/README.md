@@ -14,8 +14,8 @@ The file of interest is `drivers/input/keyboard/atkbd.c`. But which function do 
 ‎
 <details>
 <summary>Psst.. want a hint?</summary>
-
-      Look at the function named interrupt, because when you press a key, your keyboard sends a interrupt to the OS, which is its way of telling, "Hold up, process this signal"
+ 
+      So, when you press a key, somehow your driver has to get the data right? Maybe try seraching for the function which receives the data?
 </details>
 ‎
 <details>
@@ -25,7 +25,7 @@ The file of interest is `drivers/input/keyboard/atkbd.c`. But which function do 
    Look for the function:
 
    ```c
-   static irqreturn_t atkbd_interrupt(...)
+   static irqreturn_t atkbd_receive_byte(...)
    ```
 </details>
    ‎
