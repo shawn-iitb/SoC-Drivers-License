@@ -65,15 +65,6 @@ void special_cmd_cd(char **tokens) {
     chdir(path);
 }
 
-void special_cmd_exit(int bg_tasks[]) {
-    for (int i = 0; bg_tasks[i] != -1; i++) {
-        kill(bg_tasks[i], SIGKILL);
-    }
-
-    for (int i = 0; bg_tasks[i] != -1; i++) {
-        waitpid(bg_tasks[i], NULL, 0);
-    }
-}
 
 int main(int argc, char *argv[]) {
     char line[MAX_INPUT_SIZE];
@@ -105,12 +96,6 @@ int main(int argc, char *argv[]) {
         if (tokens[0] == NULL) {
             free_tokens(tokens);
             continue;
-        }
-
-        if (strcmp(tokens[0], "exit") == 0) {
-            special_cmd_exit(bg_tasks);
-            free_tokens(tokens);
-            break;
         }
 
         if (strcmp(tokens[0], "cd") == 0) {

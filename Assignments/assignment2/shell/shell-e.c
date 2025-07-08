@@ -4,13 +4,15 @@
 #include <string.h>
 #include <unistd.h>
 #include <sys/wait.h>
+#include <errno.h>
 
 #define MAX_INPUT_SIZE 1024
 #define MAX_TOKEN_SIZE 64
 #define MAX_NUM_TOKENS 64
 #define MAX_CWD_SIZE 256
+#define MAX_BG_TASKS 64
 
-int child_pid = -1;
+int fg_child_pid = -1;
 
 /* Splits the string by space and returns the array of tokens
 *
@@ -66,14 +68,24 @@ void special_cmd_cd(char **tokens) {
     chdir(path);
 }
 
+void special_cmd_exit(int bg_tasks[]) {
+    for (int i = 0; bg_tasks[i] != -1; i++) {
+        kill(bg_tasks[i], SIGKILL);
+    }
+
+    for (int i = 0; bg_tasks[i] != -1; i++) {
+        waitpid(bg_tasks[i], NULL, 0);
+    }
+}
+
 void handler(int sig) {
 
     // printf("1 %d\n", getpid());
 
-    if (child_pid == -1) {
+    if (fg_child_pid == -1) {
         // nothing lol
     } else {
-        kill(child_pid, SIGINT);
+        kill(fg_child_pid, SIGINT);
     }
 
     // signal(SIGINT, handler);
@@ -83,7 +95,10 @@ int main(int argc, char *argv[]) {
     char line[MAX_INPUT_SIZE];
     char **tokens;
 
-    // signal handler does not survive after exec(), so no need to worry about the child using it
+    // background tasks stuff
+    int bg_tasks[MAX_BG_TASKS];
+    bg_tasks[0] = -1;
+
     signal(SIGINT, handler);
 
     while (1) {
@@ -110,38 +125,86 @@ int main(int argc, char *argv[]) {
             continue;
         }
 
+        if (strcmp(tokens[0], "exit") == 0) {
+            special_cmd_exit(bg_tasks);
+            free_tokens(tokens);
+            break;
+        }
+
         if (strcmp(tokens[0], "cd") == 0) {
             special_cmd_cd(tokens);
             free_tokens(tokens);
             continue;
         }
 
-        if (strcmp(tokens[0], "exit") == 0) {
-            free_tokens(tokens);
-            break;
+        int last;
+        for (last = 0; tokens[last + 1] != NULL; last++) {}
+
+        int fg = 1;
+
+        if (strcmp(tokens[last], "&") == 0) {
+            tokens[last] = NULL;
+            fg = 0;
         }
-
-
 
         int rc = fork();
         if (rc < 0) {
             fprintf(stderr, "fork failed\n");
         } else if (rc == 0) {
+            setpgid(0, 0);
+            signal(SIGINT, SIG_DFL); // i believe the signal handler doesnt go through exec anyways, but still
             child(tokens);
             free_tokens(tokens);
             exit(0);
         }
 
-        child_pid = rc;
 
-        int ws;
-        wait(&ws);
+        if (fg) {
+            fg_child_pid = rc;
 
-        child_pid = -1;
+            int ws;
+            waitpid(rc, &ws, 0);
 
-        int exit_status = WEXITSTATUS(ws);
-        if (exit_status == 1) {
-            printf("EXITSTATUS: 1\n");
+            fg_child_pid = -1;
+
+            int exit_status = WEXITSTATUS(ws);
+            if (exit_status == 1) {
+                printf("EXITSTATUS: 1\n");
+            }
+        } else {
+            printf("Shell: Background process started: %d\n\n", rc);
+
+            int last_bg_task;
+            for (last_bg_task = 0; bg_tasks[last_bg_task] != -1; last_bg_task++) {}
+            bg_tasks[last_bg_task] = rc;
+            bg_tasks[last_bg_task + 1] = -1;
+        }
+
+        // managing background tasks
+        for (int i = 0, j = 0;; i++, j++) {
+            if (bg_tasks[i] == -1) {
+                bg_tasks[j] = -1;
+
+                break;
+            }
+
+            int pid = bg_tasks[i];
+
+            int ws;
+            int return_pid = waitpid(pid, &ws, WNOHANG);
+
+
+            if (return_pid == pid) {
+                printf("\nShell: Background process finished: %d\n", pid);
+
+                int exit_status = WEXITSTATUS(ws);
+                if (exit_status == 1) {
+                    printf("EXITSTATUS: 1\n");
+                }
+                j--;
+            } else {
+                bg_tasks[j] = bg_tasks[i];
+            }
         }
 
 
